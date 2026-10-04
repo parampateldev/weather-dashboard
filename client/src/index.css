@@ -1,68 +1,227 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-ui: 'Bricolage Grotesque Variable', 'Avenir Next', 'Gill Sans', sans-serif;
+
+  --ink: #fff7ea;
+  --ink-soft: rgba(255, 247, 234, 0.78);
+  --line: rgba(255, 247, 234, 0.26);
+  --accent: #ffc56b;
+  --deep: #0f2236;
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  color-scheme: dark;
+  font-family: var(--font-ui);
   line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
+  color: var(--ink);
+  background: #0d2a4a;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-a:hover {
-  color: #535bf2;
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.16);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+h1,
+h2,
+h3,
+h4,
+p,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--deep);
+}
+
+/* ---------- Atmospheric sky ---------- */
+
+@property --sky-top {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0d2a4a;
+}
+@property --sky-mid {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1f5f8b;
+}
+@property --sky-low {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #bf6a2c;
+}
+@property --sky-glow {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffb457;
+}
+
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 58%, var(--sky-low) 100%);
+  transition:
+    --sky-top 1.6s ease,
+    --sky-mid 1.6s ease,
+    --sky-low 1.6s ease,
+    --sky-glow 1.6s ease;
+
+  --sky-top: #0d2a4a;
+  --sky-mid: #1f5f8b;
+  --sky-low: #bf6a2c;
+  --sky-glow: #ffb457;
+}
+
+.sky[data-theme='clear-day'] {
+  --sky-top: #0e4a82;
+  --sky-mid: #2a7cb4;
+  --sky-low: #bb6c30;
+  --sky-glow: #ffd27a;
+}
+.sky[data-theme='clear-night'] {
+  --sky-top: #050a18;
+  --sky-mid: #0e2142;
+  --sky-low: #27476b;
+  --sky-glow: #7fa6d6;
+}
+.sky[data-theme='overcast'] {
+  --sky-top: #2b3846;
+  --sky-mid: #4d6070;
+  --sky-low: #66767f;
+  --sky-glow: #b9c6cf;
+}
+.sky[data-theme='rain'] {
+  --sky-top: #101c27;
+  --sky-mid: #25404f;
+  --sky-low: #3d606d;
+  --sky-glow: #77a5b5;
+}
+.sky[data-theme='snow'] {
+  --sky-top: #2f465f;
+  --sky-mid: #587794;
+  --sky-low: #6a8399;
+  --sky-glow: #dcebf7;
+}
+.sky[data-theme='storm'] {
+  --sky-top: #0b0f16;
+  --sky-mid: #232a38;
+  --sky-low: #54482f;
+  --sky-glow: #d9b45a;
+}
+.sky[data-theme='fog'] {
+  --sky-top: #34434a;
+  --sky-mid: #5d6f74;
+  --sky-low: #6f7f80;
+  --sky-glow: #c9d6d2;
+}
+
+.sky-glow {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--sky-glow) 0%, transparent 68%);
+  opacity: 0.38;
+  filter: blur(30px);
+  will-change: transform;
+}
+
+.sky-glow-a {
+  width: 70vmax;
+  height: 70vmax;
+  left: -20vmax;
+  bottom: -38vmax;
+  animation: drift-a 38s ease-in-out infinite alternate;
+}
+
+.sky-glow-b {
+  width: 46vmax;
+  height: 46vmax;
+  right: -14vmax;
+  top: -22vmax;
+  opacity: 0.2;
+  animation: drift-b 52s ease-in-out infinite alternate;
+}
+
+.sky-horizon {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 30%;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.18));
+}
+
+@keyframes drift-a {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
   }
-  a:hover {
-    color: #747bff;
+  to {
+    transform: translate3d(22vw, -9vh, 0) scale(1.12);
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@keyframes drift-b {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-18vw, 14vh, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
