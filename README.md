@@ -67,7 +67,7 @@ npm run preview   # serve the production build locally
 
 ## Deploying to GitHub Pages
 
-The Vite `base` is `/`, so the build expects to be served from the root of a domain. That fits a user or organization site such as `username.github.io`, or a custom domain.
+The Vite `base` is `/weather-dashboard/`, matching the GitHub Pages project URL.
 
 ```
 ./deploy.sh
@@ -78,7 +78,6 @@ git push
 
 `deploy.sh` installs dependencies, builds, and replaces `index.html` and `assets/` in the repository root with the new output. Set GitHub Pages to serve from the main branch root.
 
-If you want to host under a sub path such as `/weather-dashboard/`, change `base` in `client/vite.config.js` to match.
 
 ## Limits
 
