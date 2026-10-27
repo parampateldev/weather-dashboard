@@ -26,6 +26,8 @@
 /* ---------- Hero ---------- */
 
 .hero {
+  position: relative;
+  z-index: 20;
   padding: clamp(2rem, 8vh, 5rem) 0 2rem;
 }
 
@@ -99,6 +101,7 @@
 
 .search {
   position: relative;
+  z-index: 30;
   margin-top: 2.25rem;
   max-width: 40rem;
   display: flex;
@@ -111,6 +114,7 @@
 
 .search form {
   position: relative;
+  z-index: 2;
   width: 100%;
 }
 
@@ -199,19 +203,20 @@
 
 .suggestions {
   position: absolute;
-  z-index: 10;
+  z-index: 40;
   top: calc(100% + 0.5rem);
   left: 0;
   right: 0;
   max-height: 20rem;
   overflow-y: auto;
-  background: rgba(9, 20, 34, 0.94);
-  backdrop-filter: blur(14px);
+  /* Fully opaque so weather content cannot show through the list */
+  background: #0b1626;
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 0.35rem;
   text-shadow: none;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.55);
+  isolation: isolate;
 }
 
 .suggestions-title {
@@ -310,7 +315,16 @@
 /* ---------- Results ---------- */
 
 .results {
+  position: relative;
+  z-index: 1;
   flex: 1;
+}
+
+/* Keep weather content out of the way while the place list is open */
+.page:has(.suggestions) .results {
+  opacity: 0.2;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
 }
 
 .notice {
