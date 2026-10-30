@@ -30,7 +30,7 @@ export default function App() {
   const [status, setStatus] = useState('idle') // idle | loading | locating | ready | error
   const [error, setError] = useState('')
   const [selectedDate, setSelectedDate] = useState(null)
-  const [unit, setUnit] = useStoredState('wd:unit', 'metric', (v) => v === 'metric' || v === 'imperial')
+  const [unit, setUnit] = useStoredState('wd:unit', 'imperial', (v) => v === 'metric' || v === 'imperial')
   const [clock, setClock] = useStoredState('wd:clock', '12', (v) => v === '12' || v === '24')
   const { places, starred, recent, record, toggleStar, remove, clearRecent } = usePlaces()
   const [panelPref, setPanelPref] = useStoredState('wd:panel', 'open', (v) => v === 'open' || v === 'closed')
@@ -154,8 +154,8 @@ export default function App() {
             value={unit}
             onChange={setUnit}
             options={[
-              { value: 'metric', label: '\u00b0C' },
               { value: 'imperial', label: '\u00b0F' },
+              { value: 'metric', label: '\u00b0C' },
             ]}
           />
         </div>

@@ -13,7 +13,7 @@ All weather and place data comes from [Open-Meteo](https://open-meteo.com/), whi
 - One continuous hour by hour strip for the whole week. Open any day and keep scrolling past midnight into the next day, with no need to close and reopen. Day chips and previous or next buttons jump between days, and the heading and daily facts follow the day in view
 - Places sidebar with starred and recent places. Star a place to pin it, forget one you no longer want, and the app reopens the place you looked at last
 - Local time shown for the forecast location, using the timezone returned by the API
-- Celsius or Fahrenheit, and 12 hour or 24 hour clock, remembered between visits
+- Fahrenheit by default with a switch to Celsius, and 12 hour or 24 hour clock, remembered between visits
 - Saved places, units and clock format are kept in localStorage on your device only
 - Sky colors that change with the current conditions and time of day
 
