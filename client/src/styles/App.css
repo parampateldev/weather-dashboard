@@ -832,13 +832,31 @@
     padding: 0;
   }
 
+  /* Tall touch target with a small visible bar. The top of the sheet is a drag zone, so the browser
+     must not claim vertical touches there for scrolling. */
   .sheet-grab {
     display: block;
-    width: 2.5rem;
-    height: 4px;
-    margin: -0.5rem auto 0.9rem;
-    border-radius: 4px;
-    background: var(--line);
+    height: 2.25rem;
+    margin: -1.25rem -1.25rem 0;
+    position: relative;
+  }
+
+  .sheet-grab::after {
+    content: '';
+    position: absolute;
+    top: 0.85rem;
+    left: 50%;
+    width: 2.75rem;
+    height: 5px;
+    margin-left: -1.375rem;
+    border-radius: 5px;
+    background: rgba(255, 247, 234, 0.45);
+  }
+
+  .sheet-grab,
+  .sheet-head,
+  .sheet-summary {
+    touch-action: none;
   }
 
   .sheet {
