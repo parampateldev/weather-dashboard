@@ -41,6 +41,14 @@ export function dateLabel(dateString, options) {
   return new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', ...options }).format(new Date(`${dateString}T00:00:00Z`))
 }
 
+// "Today", "Tomorrow", then the weekday name, relative to the forecast location's current date.
+export function dayName(date, todayDate) {
+  if (date === todayDate) return 'Today'
+  const diff = Math.round((Date.parse(`${date}T00:00:00Z`) - Date.parse(`${todayDate}T00:00:00Z`)) / 86400000)
+  if (diff === 1) return 'Tomorrow'
+  return dateLabel(date, { weekday: 'long' })
+}
+
 // Current wall-clock time at the forecast location, using the timezone from the API.
 export function nowAt(timezone, clock, now = new Date()) {
   try {

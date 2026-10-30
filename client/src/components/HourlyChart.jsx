@@ -1,4 +1,4 @@
-const COL = 64
+export const COL = 64
 const H = 110
 const PAD = 18
 

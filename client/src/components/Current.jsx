@@ -1,8 +1,9 @@
 import { describeWeather } from '../lib/weather'
 import { dateLabel, localClock, percent, temp, timezoneLabel, wind, rain } from '../lib/format'
+import StarButton from './StarButton'
 import WeatherIcon from './WeatherIcon'
 
-export default function Current({ place, forecast, unit, clock, now }) {
+export default function Current({ place, forecast, unit, clock, now, starred, onToggleStar }) {
   const { current, days, timezone } = forecast
   const today = days.find((d) => d.date === now.date) || days[0]
   const description = describeWeather(current.code)
@@ -16,9 +17,12 @@ export default function Current({ place, forecast, unit, clock, now }) {
           {now.label} {timezoneLabel(timezone)}
         </span>
       </p>
-      <h2 id="place-name" className="place-name">
-        {place.name}
-      </h2>
+      <div className="place-title-row">
+        <h2 id="place-name" className="place-name">
+          {place.name}
+        </h2>
+        {onToggleStar && <StarButton starred={starred} name={place.name} onToggle={onToggleStar} size={22} />}
+      </div>
       {place.detail && <p className="place-detail">{place.detail}</p>}
 
       <div className="current-main">

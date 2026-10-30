@@ -1,13 +1,6 @@
 import { describeWeather } from '../lib/weather'
-import { dateLabel, percent, temp } from '../lib/format'
+import { dateLabel, dayName, percent, temp } from '../lib/format'
 import WeatherIcon from './WeatherIcon'
-
-function dayName(date, todayDate) {
-  if (date === todayDate) return 'Today'
-  const diff = Math.round((Date.parse(`${date}T00:00:00Z`) - Date.parse(`${todayDate}T00:00:00Z`)) / 86400000)
-  if (diff === 1) return 'Tomorrow'
-  return dateLabel(date, { weekday: 'long' })
-}
 
 export default function Forecast({ days, todayDate, unit, onSelect }) {
   const lo = Math.min(...days.map((d) => d.min))

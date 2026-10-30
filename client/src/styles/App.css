@@ -597,6 +597,10 @@
   margin: 1.75rem 0 0.75rem;
 }
 
+.hourly-scroll:focus-visible {
+  outline-offset: 2px;
+}
+
 .hourly-scroll {
   overflow-x: auto;
   padding-bottom: 0.5rem;
@@ -612,6 +616,77 @@
 
 .hourly-chart {
   display: block;
+}
+
+.hourly-days {
+  display: flex;
+  margin-bottom: 0.25rem;
+}
+
+.hourly-days li {
+  flex: none;
+  width: calc(var(--n) * 64px);
+  border-left: 1px solid var(--line);
+}
+
+.hourly-days li:first-child {
+  border-left: 0;
+}
+
+/* Stays pinned at the left edge while its day is in view */
+.hourly-days span {
+  position: sticky;
+  left: 0;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.1rem 0.6rem 0.1rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hourly-days li:first-child span {
+  padding-left: 0;
+}
+
+.hourly-days small {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.day-tabs {
+  overflow-x: auto;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.25rem;
+  scrollbar-width: none;
+}
+
+.day-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.day-tabs .segmented button {
+  min-width: 0;
+  padding: 0 0.7rem;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.sheet-actions {
+  flex: none;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.close:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.close:disabled:hover {
+  background: transparent;
 }
 
 .chart-area {
@@ -645,6 +720,11 @@
   gap: 0.35rem;
   padding: 0.6rem 0;
   border-radius: 12px;
+}
+
+.hourly-list li.is-day-start {
+  border-left: 1px solid var(--line);
+  border-radius: 0 12px 12px 0;
 }
 
 .hourly-list li.is-now {

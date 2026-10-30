@@ -10,10 +10,11 @@ All weather and place data comes from [Open-Meteo](https://open-meteo.com/), whi
 - "Use my location" button that uses the browser geolocation API
 - Current temperature, feels like, humidity, wind, rain, sunrise and sunset
 - Seven day forecast with daily highs, lows and chance of rain
-- Day detail with real hourly data: temperature curve, conditions, rain chance and wind for each hour
+- One continuous hour by hour strip for the whole week. Open any day and keep scrolling past midnight into the next day, with no need to close and reopen. Day chips and previous or next buttons jump between days, and the heading and daily facts follow the day in view
+- Places sidebar with starred and recent places. Star a place to pin it, forget one you no longer want, and the app reopens the place you looked at last
 - Local time shown for the forecast location, using the timezone returned by the API
 - Celsius or Fahrenheit, and 12 hour or 24 hour clock, remembered between visits
-- Recent searches stored in localStorage on your device only
+- Saved places, units and clock format are kept in localStorage on your device only
 - Sky colors that change with the current conditions and time of day
 
 ## Data sources
@@ -30,22 +31,25 @@ Geolocation does not use reverse geocoding, so a location found this way is labe
 ## Project layout
 
 ```
+.github/workflows/deploy.yml   builds the app and publishes it to GitHub Pages
 client/
   index.html
   public/favicon.svg
   src/
     main.jsx            entry point and font imports
     App.jsx             state, data loading, page layout
-    App.css             component styles
-    index.css           base styles and sky themes
-    api/openMeteo.js    geocoding and forecast requests
-    lib/                weather code mapping, formatting and unit helpers
-    hooks/              clock, stored state and debounced suggestions
-    components/         search, current conditions, forecast, day detail, icons
-deploy.sh               build and copy to the repository root
+    api/                geocoding and forecast requests (openMeteo.js)
+    components/         search, sidebar, current conditions, forecast, hourly sheet, icons
+    hooks/              clock, stored state, saved places and debounced suggestions
+    lib/                weather code mapping, formatting, unit and saved place helpers
+    styles/             index.css (base and sky themes), App.css, sidebar.css
 ```
 
 Fonts are Fraunces and Bricolage Grotesque, installed from npm through Fontsource and bundled with the build, so no request is made to a font host.
+
+## Saved places
+
+Places live in `localStorage` under `wd:places` as a list of `{ key, name, latitude, longitude, starred, lastUsed }`. The 15 newest unstarred places are kept and starred places are never trimmed. Nothing is sent to a server. Clearing site data for the page clears the list.
 
 ## Development
 
@@ -67,17 +71,7 @@ npm run preview   # serve the production build locally
 
 ## Deploying to GitHub Pages
 
-The Vite `base` is `/weather-dashboard/`, matching the GitHub Pages project URL.
-
-```
-./deploy.sh
-git add -A
-git commit -m "Update build"
-git push
-```
-
-`deploy.sh` installs dependencies, builds, and replaces `index.html` and `assets/` in the repository root with the new output. Set GitHub Pages to serve from the main branch root.
-
+The Vite `base` is `/weather-dashboard/`, matching the GitHub Pages project URL. Pushing to `main` runs the workflow in `.github/workflows/deploy.yml`, which lints, builds and publishes `client/dist`. Build output is not committed. In the repository settings, Pages must use "GitHub Actions" as its source.
 
 ## Limits
 
