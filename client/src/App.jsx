@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { fetchForecast, resolvePlace } from './api/openMeteo'
+import { reverseGeocode } from './api/reverseGeocode'
 import Current from './components/Current'
 import DayDetail from './components/DayDetail'
 import Forecast from './components/Forecast'
@@ -74,24 +75,23 @@ export default function App() {
       setStatus('error')
       return
     }
-    load(
-      () =>
-        new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(
-            ({ coords }) =>
-              resolve({
-                name: 'Your location',
-                detail: `${coords.latitude.toFixed(2)}, ${coords.longitude.toFixed(2)}`,
-                latitude: coords.latitude,
-                longitude: coords.longitude,
-                isGeo: true,
-              }),
-            (err) => reject(new Error(geolocationMessage(err))),
-            { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
-          )
-        }),
-      'locating',
-    )
+    load(async () => {
+      const coords = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          ({ coords: c }) => resolve(c),
+          (err) => reject(new Error(geolocationMessage(err))),
+          { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
+        )
+      })
+      const city = await reverseGeocode(coords.latitude, coords.longitude)
+      return {
+        name: city || 'Your location',
+        detail: city ? 'Your current location' : `${coords.latitude.toFixed(2)}, ${coords.longitude.toFixed(2)}`,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        isGeo: true,
+      }
+    }, 'locating')
   }, [load])
 
   useEffect(() => () => requestRef.current?.abort(), [])

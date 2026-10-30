@@ -2,12 +2,12 @@
 
 A small weather web app. Search for a place or use your current location to see current conditions, a seven day outlook, and an hour by hour breakdown for any day.
 
-All weather and place data comes from [Open-Meteo](https://open-meteo.com/), which is free to use for non-commercial projects and needs no API key. There is no backend, no account, and no map. The browser talks to Open-Meteo directly.
+All weather and place data comes from [Open-Meteo](https://open-meteo.com/), which is free to use for non-commercial projects and needs no API key. There is no backend, no account, and no map. The browser talks to Open-Meteo directly, plus one reverse geocoding call when you use your location.
 
 ## Features
 
 - Place search with suggestions, from the Open-Meteo geocoding API
-- "Use my location" button that uses the browser geolocation API
+- "Use my location" button that uses the browser geolocation API and shows the city you are in
 - Current temperature, feels like, humidity, wind, rain, sunrise and sunset
 - Seven day forecast with daily highs, lows and chance of rain
 - One continuous hour by hour strip for the whole week. Open any day and keep scrolling past midnight into the next day, with no need to close and reopen. Day chips and previous or next buttons jump between days, and the heading and daily facts follow the day in view
@@ -23,10 +23,11 @@ All weather and place data comes from [Open-Meteo](https://open-meteo.com/), whi
 | --- | --- |
 | Place search | `https://geocoding-api.open-meteo.com/v1/search` |
 | Forecast | `https://api.open-meteo.com/v1/forecast` |
+| City name for "Use my location" | `https://api-bdc.io/data/reverse-geocode-client` (BigDataCloud) |
 
 The forecast request asks for `current`, `daily` and `hourly` fields in a single call with `timezone=auto`. Values are fetched in metric units, and the Fahrenheit, mph and inch displays are converted in the browser.
 
-Geolocation does not use reverse geocoding, so a location found this way is labeled "Your location" with its rounded coordinates.
+"Use my location" sends your coordinates to BigDataCloud's free client side reverse geocoding endpoint to get a city name. If that request fails, or the point is not in a named place such as open ocean, the place is labeled "Your location" with its rounded coordinates. Searching by name never sends coordinates anywhere except Open-Meteo.
 
 ## Project layout
 
