@@ -12,7 +12,7 @@ export default function Current({ place, forecast, unit, clock, now, starred, on
     <section className="current" aria-labelledby="place-name">
       <p className="eyebrow">
         {dateLabel(now.date, { weekday: 'long', month: 'long', day: 'numeric' })}
-        <span className="eyebrow-sep" aria-hidden="true" />
+        <span className="eyebrow-sep" aria-hidden="true">·</span>
         <span className="eyebrow-time">
           {now.label} {timezoneLabel(timezone)}
         </span>
