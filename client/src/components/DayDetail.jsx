@@ -15,6 +15,7 @@ export default function DayDetail({ days, initialDate, nowIso, unit, clock, onCl
   const dialogRef = useRef(null)
   const scrollRef = useRef(null)
   const frameRef = useRef(0)
+  const closeRef = useRef(onClose)
   const [activeDate, setActiveDate] = useState(initialDate)
 
   const { hours, starts } = useMemo(() => {
@@ -70,6 +71,83 @@ export default function DayDetail({ days, initialDate, nowIso, unit, clock, onCl
 
   useEffect(() => () => cancelAnimationFrame(frameRef.current), [])
 
+  useEffect(() => {
+    closeRef.current = onClose
+  }, [onClose])
+
+  // Swipe down on the sheet to close it, the same as pressing the X. The sheet follows the finger and
+  // closes when released past a distance or with enough speed, otherwise it springs back.
+  useEffect(() => {
+    const sheet = dialogRef.current
+    if (!sheet) return undefined
+    const CLOSE_DISTANCE = 110
+    const CLOSE_SPEED = 0.6 // px per ms
+    let start = null
+    let mode = 'idle' // idle | pending | drag | ignore
+    let dy = 0
+
+    function reset(animate) {
+      sheet.style.transition = animate ? 'transform 0.25s var(--ease-out)' : ''
+      sheet.style.transform = ''
+      sheet.style.animation = ''
+    }
+
+    function onStart(e) {
+      if (e.touches.length !== 1) return
+      const t = e.touches[0]
+      start = { x: t.clientX, y: t.clientY, time: e.timeStamp }
+      mode = 'pending'
+      dy = 0
+    }
+
+    function onMove(e) {
+      if (!start || mode === 'ignore') return
+      const t = e.touches[0]
+      dy = t.clientY - start.y
+      const dx = t.clientX - start.x
+      if (mode === 'pending') {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return
+        // Only a mostly vertical pull from the top of the sheet counts. Sideways swipes belong to the hourly strip.
+        mode = dy > 0 && Math.abs(dy) > Math.abs(dx) && sheet.scrollTop <= 0 ? 'drag' : 'ignore'
+        if (mode === 'drag') {
+          sheet.style.animation = 'none'
+          sheet.style.transition = 'none'
+        }
+      }
+      if (mode === 'drag') {
+        e.preventDefault()
+        dy = Math.max(dy, 0)
+        sheet.style.transform = `translateY(${dy}px)`
+      }
+    }
+
+    function onEnd(e) {
+      if (mode === 'drag') {
+        const speed = dy / Math.max(e.timeStamp - start.time, 1)
+        if (dy > CLOSE_DISTANCE || (dy > 30 && speed > CLOSE_SPEED)) {
+          sheet.style.transition = 'transform 0.2s ease-in'
+          sheet.style.transform = 'translateY(100%)'
+          setTimeout(() => closeRef.current(), 180)
+        } else {
+          reset(true)
+        }
+      }
+      start = null
+      mode = 'idle'
+    }
+
+    sheet.addEventListener('touchstart', onStart, { passive: true })
+    sheet.addEventListener('touchmove', onMove, { passive: false })
+    sheet.addEventListener('touchend', onEnd)
+    sheet.addEventListener('touchcancel', onEnd)
+    return () => {
+      sheet.removeEventListener('touchstart', onStart)
+      sheet.removeEventListener('touchmove', onMove)
+      sheet.removeEventListener('touchend', onEnd)
+      sheet.removeEventListener('touchcancel', onEnd)
+    }
+  }, [])
+
   function onScroll() {
     cancelAnimationFrame(frameRef.current)
     frameRef.current = requestAnimationFrame(() => {
@@ -122,6 +200,7 @@ export default function DayDetail({ days, initialDate, nowIso, unit, clock, onCl
         ref={dialogRef}
         onKeyDown={onKeyDown}
       >
+        <div className="sheet-grab" aria-hidden="true" />
         <div className="sheet-head">
           <div>
             <p className="eyebrow">{dateLabel(day.date, { weekday: 'long' })}</p>

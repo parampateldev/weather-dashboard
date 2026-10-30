@@ -533,6 +533,10 @@
   }
 }
 
+.sheet-grab {
+  display: none;
+}
+
 .sheet-head {
   display: flex;
   justify-content: space-between;
@@ -828,8 +832,18 @@
     padding: 0;
   }
 
+  .sheet-grab {
+    display: block;
+    width: 2.5rem;
+    height: 4px;
+    margin: -0.5rem auto 0.9rem;
+    border-radius: 4px;
+    background: var(--line);
+  }
+
   .sheet {
     width: 100%;
+    overscroll-behavior: contain;
     max-height: 92svh;
     border-radius: 24px 24px 0 0;
     border-bottom: 0;
